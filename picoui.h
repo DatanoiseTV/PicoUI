@@ -13,7 +13,6 @@ typedef struct Control {
   const char *label;
   void (*callback)(Control, int);
   String value;
-  unsigned int color;
 } Control;
 
 typedef enum EncoderTypes
@@ -50,27 +49,55 @@ class PicoUI_RotaryEncoder
 
 class PicoUI_Label
 {
-  PicoUI_Label();
   public:
+    PicoUI_Label();
     String label = String("Unnamed");
 };
 
 class PicoUI_Button
 {
-  PicoUI_Button();
   public:
+    PicoUI_Button();
     String label = String("Unnamed");
     int *callback = NULL;
 };
 
 class PicoUI_Switch
 {
-  PicoUI_Switch();
+
   public:
+    PicoUI_Switch();
     String label = String("Unnamed");
     int *callback = NULL;
 
     bool defaultState = 0;
+};
+
+class PicoUI_Element
+{
+  public:
+    PicoUI_Element();
+    void addElement(PicoUI_RotaryEncoder element, int pos_x, int pos_y);
+    void addElement(PicoUI_Label element, int pos_x, int pos_y);
+    void addElement(PicoUI_Button element, int pos_x, int pos_y);
+    void addElement(PicoUI_Switch element, int pos_x, int pos_y);
+
+};
+
+class PicoUI_Tab : public PicoUI_Element
+{
+  public:
+    PicoUI_Tab ();
+
+};
+
+class PicoUI_Page : public PicoUI_Element
+{
+  public:
+    PicoUI_Page ();
+
+    void addTab(PicoUI_Tab);
+
 };
 
 class PicoUI
@@ -78,12 +105,10 @@ class PicoUI
   public:
     PicoUI();
 
-    void addElement(PicoUI_RotaryEncoder element, int pos_x, int pos_y);
-    void addElement(PicoUI_Label element, int pos_x, int pos_y);
-    void addElement(PicoUI_Button element, int pos_x, int pos_y);
-    void addElement(PicoUI_Switch element, int pos_x, int pos_y);
+    void addPage(PicoUI_Page page);
+    void setPage(PicoUI_Page page);
 
-    void attachLCD(const OLED_SSD1306 *oled);
+    void attachDisplay(const OLED_SSD1306 oled);
 
     void update();
 
